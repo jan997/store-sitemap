@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio'
 import RouteParser from 'route-parser'
 
 import { SITEMAP_URL } from '../utils'
-import { SitemapEntry } from './generateMiddlewares/utils'
+import { SitemapEntry, wrapCdata } from './generateMiddlewares/utils'
 
 const getBinding = (bindingId: string, bindings: Binding[]) =>
   bindings.find(binding => binding.id === bindingId)
@@ -42,7 +42,7 @@ export const URLEntry = (
       .join('\n')
     : ''
   let entry = `
-      <loc>${loc}</loc>
+      <loc>${wrapCdata(loc)}</loc>
       ${localization}
       <lastmod>${lastUpdated}</lastmod>
     `

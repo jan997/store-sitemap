@@ -154,3 +154,22 @@ export const cleanConfigBucket = async (enabledIndexFiles: string[], vbase: VBas
   ])
 
 const allTruthy = <T>(array: T[]) => !array.some(e => !e)
+
+/**
+ * Remove every code point that XML 1.0 forbids
+ * (0x00–0x08, 0x0B, 0x0C, 0x0E–0x1F, plus U+FFFE & U+FFFF).
+ * Replace each one with its percent-encoded form, e.g. 0x1F → "%1F".
+ */
+const sanitizeXmlChars = (value: string): string =>
+  value.replace(
+    /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/gu,
+    ch => '%' + ch.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')
+  );
+// Unreserved + delimiter characters per RFC 3986
+const URL_SAFE_RE = /^[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]*$/u;
+export const wrapCdata = (text: string): string => {
+  const cleaned = sanitizeXmlChars(text);           
+  const needsCdata =
+    /[<&>"']/u.test(cleaned) || !URL_SAFE_RE.test(cleaned);
+  return needsCdata ? `<![CDATA[${cleaned}]]>` : cleaned;
+};

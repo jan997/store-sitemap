@@ -9,7 +9,7 @@ import {
   SitemapNotFound,
   startSitemapGeneration,
 } from '../utils'
-import { currentDate, SitemapIndex } from './generateMiddlewares/utils'
+import { currentDate, SitemapIndex, wrapCdata } from './generateMiddlewares/utils'
 
 const sitemapIndexEntry = (
   forwardedHost: string,
@@ -22,7 +22,7 @@ const sitemapIndexEntry = (
     ? `?__bindingAddress=${bindingAddress}`
     : ''
   return `<sitemap>
-      <loc>https://${forwardedHost}${rootPath}/sitemap/${entry}.xml${querystring}</loc>
+      <loc>${wrapCdata(`https://${forwardedHost}${rootPath}/sitemap/${entry}.xml${querystring}`)}</loc>
       <lastmod>${lastUpdated}</lastmod>
     </sitemap>`
 }
@@ -36,7 +36,7 @@ const sitemapBindingEntry = (
     ? `?__bindingAddress=${bindingAddress}`
     : ''
   return `<sitemap>
-      <loc>https://${host}/sitemap.xml${querystring}</loc>
+      <loc>${wrapCdata(`https://${host}/sitemap.xml${querystring}`)}</loc>
       <lastmod>${lastUpdated}</lastmod>
     </sitemap>`
 }

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Xml escape character
+
 ## [2.16.7] - 2025-04-15
 
 ### Fixed
